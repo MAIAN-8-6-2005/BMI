@@ -1,307 +1,493 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>SmartBMI – Ứng dụng tính chỉ số BMI</title>
-  <style>
-    * {
-      box-sizing: border-box;
-      font-family: "Poppins", sans-serif;
-    }
-    body {
-      margin: 0;
-      background: linear-gradient(160deg, #e0f7fa, #f9ffff);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-height: 100vh;
-      color: #222;
-    }
-    header {
-      width: 100%;
-      text-align: center;
-      background: #00acc1;
-      color: white;
-      font-size: 22px;
-      padding: 15px 10px;
-      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-      letter-spacing: 0.5px;
-    }
-    main {
-      width: 100%;
-      max-width: 450px;
-      background: white;
-      margin: 25px;
-      padding: 20px 25px;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-    }
-    label {
-      display: block;
-      font-weight: 600;
-      margin-top: 10px;
-    }
-    input, select, button {
-      width: 100%;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1px solid #ccc;
-      margin-top: 5px;
-      font-size: 15px;
-    }
-    button {
-      background: #00acc1;
-      border: none;
-      color: white;
-      font-weight: bold;
-      margin-top: 18px;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-    button:hover { background: #008b9e; }
-    .result {
-      margin-top: 20px;
-      text-align: center;
-      animation: fadeIn 0.5s ease;
-    }
-    .bmi-value {
-      font-size: 36px;
-      font-weight: bold;
-      color: #00acc1;
-    }
-    .category {
-      font-weight: 600;
-      color: #444;
-      margin-top: 5px;
-    }
-    .advice {
-      font-style: italic;
-      margin-top: 10px;
-      color: #555;
-    }
-    .table-wrap {
-      overflow-x: auto;
-      margin-top: 20px;
-    }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    th, td {
-      border: 1px solid #ddd;
-      padding: 8px;
-      text-align: center;
-    }
-    th {
-      background: #e0f7fa;
-      font-weight: 600;
-    }
-    tr.active {
-      background: #b2ebf2;
-      font-weight: bold;
-    }
-    .history {
-      margin-top: 25px;
-      border-top: 1px solid #eee;
-      padding-top: 15px;
-    }
-    .history h3 {
-      margin: 0 0 10px;
-      font-size: 16px;
-      text-align: center;
-    }
-    canvas { width: 100%; height: 200px; }
-    .btn-group {
-      display: flex;
-      justify-content: space-between;
-      gap: 10px;
-    }
-    .reset-btn {
-      background: #f44336;
-    }
-    .reset-btn:hover { background: #d32f2f; }
-    footer {
-      text-align: center;
-      color: #777;
-      font-size: 13px;
-      margin-bottom: 15px;
-    }
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-    @media (max-width: 500px) {
-      main { margin: 10px; padding: 15px; }
-      header { font-size: 18px; padding: 12px; }
-      .bmi-value { font-size: 30px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ứng Dụng App Tính Chỉ Số BMI Trong Bảo Vệ Sức Khỏe</title>
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-PoY6YbZ2xTg2o2iIYxM+0j7c4XoI3gq9dRw1E0oH5l5OZ9FZxXyI9bJgB9UjQ1c9G0g0X1z3pH5c3tV6ZpCw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+<style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:"Roboto", sans-serif; }
+body { 
+    background: linear-gradient(135deg, #1abc9c, #16a085); 
+    color:white; 
+    padding:15px; 
+    min-height:100vh; 
+    transition: background 0.5s;
+}
+h1 { 
+    text-align:center; 
+    margin-bottom:25px; 
+    font-size:36px; 
+    font-weight:700; 
+    letter-spacing:1px; 
+    text-shadow: 1px 1px 6px rgba(0,0,0,0.4);
+}
+.tabs { display:flex; justify-content:center; margin-bottom:30px; gap:12px; flex-wrap:wrap; }
+.tabs button { 
+    padding:12px 22px; 
+    border:none; 
+    background:rgba(255,255,255,0.2); 
+    color:white; 
+    font-weight:500; 
+    cursor:pointer; 
+    border-radius:12px; 
+    transition:0.35s ease; 
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.tabs button:hover { 
+    transform:translateY(-3px); 
+    background:rgba(255,255,255,0.35); 
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+.tabs button.active { 
+    background:rgba(255,255,255,0.45); 
+    box-shadow:0 6px 20px rgba(0,0,0,0.4);
+}
+.content { 
+    margin:0 auto; 
+    max-width:780px; 
+    background: rgba(0,0,0,0.18); 
+    padding:30px; 
+    border-radius:16px; 
+    box-shadow:0 8px 28px rgba(0,0,0,0.35); 
+    animation:fade 0.35s ease; 
+}
+@keyframes fade { from { opacity:0; transform:translateY(15px); } to { opacity:1; transform:none; } }
+input { 
+    width:100%; 
+    padding:14px; 
+    margin-top:10px; 
+    margin-bottom:18px; 
+    border:none; 
+    border-radius:10px; 
+    background:rgba(255,255,255,0.15); 
+    color:white; 
+    font-size:16px; 
+    transition:0.25s ease;
+    box-shadow: inset 0 2px 6px rgba(0,0,0,0.2);
+}
+input:focus { background:rgba(255,255,255,0.25); outline:none; box-shadow:0 0 8px rgba(255,255,255,0.5) inset; }
+label { font-size:16px; font-weight:500; }
+.btn { 
+    width:100%; 
+    padding:14px; 
+    border:none; 
+    background:#2ecc71; 
+    border-radius:10px; 
+    margin-top:10px; 
+    cursor:pointer; 
+    font-weight:600; 
+    font-size:16px;
+    transition:0.35s ease; 
+    box-shadow:0 4px 12px rgba(0,0,0,0.25);
+}
+.btn:hover { 
+    opacity:0.9; 
+    transform:translateY(-3px); 
+    box-shadow:0 6px 18px rgba(0,0,0,0.35);
+}
+#result { 
+    margin-top:18px; 
+    padding:22px; 
+    border-radius:14px; 
+    text-align:left; 
+    font-size:16px; 
+    font-weight:500; 
+    line-height:1.6; 
+    transition:0.3s all; 
+}
+.bmi-gay { background: #FFF9C4; color:#795548; }
+.bmi-binhthuong { background: #C8E6C9; color:#2E7D32; }
+.bmi-thuacan { background: #FFE0B2; color:#E65100; }
+.bmi-beophi { background: #FFCDD2; color:#B71C1C; }
+.report { 
+    margin-top:22px; 
+    padding:18px; 
+    border-radius:12px; 
+    font-size:15px; 
+    line-height:1.6; 
+    color:#333; 
+    background:#fff; 
+    display:none; 
+    box-shadow:0 6px 20px rgba(0,0,0,0.2);
+}
+.hidden { display:none; }
+.result-icon { margin-right:8px; color:#fff; }
+@media(max-width:500px){
+    h1{font-size:24px;} 
+    .content{padding:15px;} 
+    input{font-size:15px; padding:10px;} 
+    .btn{font-size:15px; padding:12px;}
+}
+</style>
 </head>
 <body>
-  <header>💙 SmartBMI – Tính chỉ số BMI</header>
-  <main>
-    <label for="gender">Giới tính</label>
-    <select id="gender">
-      <option value="nam">Nam</option>
-      <option value="nu">Nữ</option>
-    </select>
+<h1><i class="fas fa-heartbeat"></i> Ứng Dụng BMI</h1>
+<style>
+/* Hamburger góc phải */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    justify-content: space-between;
+    width: 30px;
+    height: 25px;
+    cursor: pointer;
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1001;
+}
+.hamburger span {
+    display: block;
+    height: 4px;
+    background-color: rgb(235, 188, 188); /* đồng bộ màu nút với theme */
+    border-radius: 2px;
+    transition: all 0.3s;
+}
 
-    <label for="age">Độ tuổi</label>
-    <select id="age">
-      <option value="treem">Trẻ em</option>
-      <option value="nguoilon" selected>Người lớn</option>
-    </select>
+/* Menu tabs */
+.tabs {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    transition: 0.3s ease;
+}
+.tabs button {
+    padding: 12px 22px;
+    border: none;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    font-weight: 500;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: 0.35s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+}
+.tabs button:hover {
+    transform: translateY(-3px);
+    background: rgba(255,255,255,0.35);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.35);
+}
+.tabs button.active {
+    background: rgba(255,255,255,0.45);
+    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+}
 
-    <label for="height">Chiều cao (m)</label>
-    <input type="number" id="height" placeholder="VD: 1.70" step="0.01" />
+/* Responsive: slide menu từ phải */
+@media (max-width: 768px) {
+    .hamburger {
+        display: flex;
+    }
+    .tabs {
+        position: fixed;
+        top: 0;
+        right: -240px; /* ẩn ngoài màn hình */
+        width: 220px;
+        height: 100%;
+        flex-direction: column;
+        gap: 15px;
+        padding: 60px 20px;
+        background: rgba(255,255,255,0.95); /* nhẹ trong suốt */
+        color: #333;
+        box-shadow: -2px 0 12px rgba(0,0,0,0.3);
+        border-radius: 12px 0 0 12px;
+        transition: right 0.35s ease-in-out;
+    }
+    .tabs.show {
+        right: 0;
+    }
+    .tabs button {
+        color: #333;
+        background: rgba(255,255,255,0.8);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    }
+    .tabs button.active,
+    .tabs button:hover {
+        color: #fff;
+        background: #16a085; /* màu nổi bật trên mobile */
+        box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+    }
+}
+</style>
 
-    <label for="weight">Cân nặng (kg)</label>
-    <input type="number" id="weight" placeholder="VD: 60" step="0.1" />
+<!-- Hamburger -->
+<div class="hamburger" id="hamburger">
+    <span></span>
+    <span></span>
+    <span></span>
+</div>
 
-    <div class="btn-group">
-      <button id="calcBtn">Tính BMI</button>
-      <button class="reset-btn" id="resetHistory">Làm mới lịch sử</button>
+<!-- Menu tabs -->
+<div class="tabs" id="menuTabs">
+    <button class="active" onclick="switchTab('home')">Trang Chủ</button>
+    <button onclick="switchTab('info')">Thông Tin</button>
+    <button onclick="switchTab('bmi')">Tính BMI</button>
+    <button onclick="switchTab('contact')">Liên Hệ</button>
+</div>
+
+<script>
+const hamburger = document.getElementById('hamburger');
+const menuTabs = document.getElementById('menuTabs');
+
+// Mở/đóng menu khi click hamburger
+hamburger.addEventListener('click', () => {
+    menuTabs.classList.toggle('show');
+    hamburger.classList.toggle('open');
+});
+
+// Lấy tất cả button trong menu
+const menuButtons = menuTabs.querySelectorAll('button');
+menuButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        // Ẩn menu
+        menuTabs.classList.remove('show');
+        hamburger.classList.remove('open');
+    });
+});
+</script>
+
+
+<div id="home" class="content">
+    <h2>Chào mừng bạn đến với ứng dụng</h2>
+    <p>Ứng dụng giúp bạn tính toán BMI để theo dõi sức khoẻ. Hiểu cơ thể mình – chủ động chăm sóc sức khỏe mỗi ngày.</p>
+</div>
+
+<div id="info" class="content hidden">
+    <h2>Thông Tin BMI</h2>
+
+    <div class="info-block">
+        <p><b>BMI (Body Mass Index)</b> là chỉ số khối cơ thể, dùng để đánh giá tình trạng cân nặng dựa trên chiều cao. BMI giúp xác định xem bạn thuộc nhóm gầy, bình thường, thừa cân hay béo phì, từ đó đưa ra các lời khuyên chăm sóc sức khỏe phù hợp.</p>
     </div>
 
-    <div class="result" id="result">
-      <p>Nhập thông tin để xem kết quả...</p>
+    <div class="info-block">
+        <h3>Cách tính BMI</h3>
+        <p style="font-style:italic; text-align:center;">BMI = Cân nặng (kg) / (Chiều cao (m))²</p>
     </div>
 
-    <div class="table-wrap" id="detailTable" style="display:none;">
-      <table>
-        <thead>
-          <tr>
-            <th>Mức độ</th>
-            <th>Chỉ số BMI</th>
-            <th>Phân loại</th>
-            <th>Nguy cơ</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td>1</td><td>&lt; 18.5</td><td>Gầy</td><td>Thấp</td></tr>
-          <tr><td>2</td><td>18.5 – 22.9</td><td>Bình thường</td><td>Trung bình</td></tr>
-          <tr><td>3</td><td>23 – 24.9</td><td>Thừa cân</td><td>Tăng</td></tr>
-          <tr><td>4</td><td>≥ 25</td><td>Béo phì</td><td>Cao</td></tr>
-        </tbody>
-      </table>
+    <div class="info-block">
+        <h3>Phân loại BMI theo nhóm</h3>
+        <ul>
+            <li><b>Gầy (BMI &lt; 18.5):</b> Nguy cơ suy giảm miễn dịch, mệt mỏi, thiếu vitamin và khoáng chất.</li>
+            <li><b>Bình thường (18.5 – 22.9):</b> Cơ thể khỏe mạnh, ít nguy cơ bệnh lý liên quan đến cân nặng.</li>
+            <li><b>Thừa cân (23 – 24.9):</b> Nguy cơ tăng huyết áp, cholesterol cao, mỡ máu.</li>
+            <li><b>Béo phì (≥ 25):</b> Nguy cơ cao mắc tiểu đường, tim mạch, gan nhiễm mỡ, đau khớp.</li>
+        </ul>
     </div>
 
-    <div class="history">
-      <h3>📊 Lịch sử BMI gần đây</h3>
-      <canvas id="bmiChart"></canvas>
+    <div class="info-block">
+        <h3>Lời khuyên chung theo nhóm BMI</h3>
+        <ul>
+            <li><b>Gầy:</b> Tăng cường protein (trứng, thịt, sữa), ăn nhiều rau củ, chia nhỏ bữa ăn, tập thể lực nhẹ nhàng, tránh tập cardio quá mức.</li>
+            <li><b>Bình thường:</b> Duy trì chế độ ăn cân đối, uống đủ nước, ngủ đủ giấc, tập thể dục đều, kết hợp cardio và tập sức mạnh.</li>
+            <li><b>Thừa cân:</b> Giảm đường và chất béo, ăn nhiều rau xanh, trái cây, chia nhỏ bữa ăn, tập cardio 30–45 phút/ngày, kết hợp tập cơ.</li>
+            <li><b>Béo phì:</b> Tham khảo bác sĩ/dinh dưỡng, ăn kiêng khoa học, hạn chế đường và tinh bột, tập luyện nhẹ đến trung bình, ưu tiên cardio, tránh quá sức.</li>
+        </ul>
     </div>
-  </main>
-  <footer>© 2025 by MAIAN – Bảo vệ sức khỏe của bạn 💪</footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <script>
-    const calcBtn = document.getElementById("calcBtn");
+    <div class="info-block">
+        <h3>Lưu ý khi sử dụng BMI</h3>
+        <ul>
+            <li>BMI chỉ là chỉ số ước lượng, không phân biệt cơ bắp hay mỡ thừa.</li>
+            <li>Người cao tuổi, phụ nữ mang thai hoặc vận động viên nên tham khảo bác sĩ để đánh giá chính xác hơn.</li>
+            <li>Kết hợp BMI với các chỉ số sức khỏe khác như vòng eo, huyết áp, mỡ máu để có cái nhìn toàn diện.</li>
+        </ul>
+    </div>
+</div>
+
+<style>
+.info-block {
+    background: rgba(255,255,255,0.1);
+    padding: 18px 20px;
+    margin-bottom: 18px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: 0.3s ease;
+}
+.info-block:hover {
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.25);
+}
+.info-block h3 {
+    margin-bottom: 10px;
+    color:#fff;
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.3);
+}
+.info-block ul {
+    padding-left: 18px;
+    line-height:1.6;
+}
+.info-block ul li {
+    margin-bottom: 8px;
+}
+</style>
+
+
+<div id="bmi" class="content hidden">
+    <h2>Tính Chỉ Số BMI</h2>
+    <label>Chiều cao (cm)</label>
+    <input type="number" id="height">
+    <label>Cân nặng (kg)</label>
+    <input type="number" id="weight">
+    <button class="btn" onclick="calcBMI()">Tính Ngay</button>
+    <div id="result"></div>
+    <div id="report" class="report"></div>
+</div>
+
+<div id="contact" class="content hidden">
+    <h2>Liên Hệ</h2>
+    <p>Nếu bạn cần hỗ trợ, hãy liên hệ chúng tôi qua các kênh sau:</p>
+    
+    <ul style="list-style:none; padding-left:0; line-height:1.8;">
+        <li><i class="fas fa-envelope"></i> Email: <a href="mailto:contact@maian.vn" style="color:white; text-decoration:underline;">contact@maian.vn</a></li>
+        <li><i class="fas fa-phone"></i> Số điện thoại: <a href="tel:+84901234567" style="color:white; text-decoration:underline;">+84 901 234 567</a></li>
+        <li><i class="fas fa-map-marker-alt"></i> Địa chỉ: 123 Đường ABC, Quận 1, TP.HCM</li>
+        <li><i class="fab fa-facebook"></i> Facebook: <a href="https://facebook.com/maian" target="_blank" style="color:white; text-decoration:underline;">fb.com/maian</a></li>
+        <li><i class="fab fa-zalo"></i> Zalo: <a href="https://zalo.me/0901234567" target="_blank" style="color:white; text-decoration:underline;">0901234567</a></li>
+        <li><i class="fas fa-clock"></i> Giờ làm việc: 08:00 - 17:00 (Thứ 2 - Thứ 6)</li>
+    </ul>
+    
+    <p style="margin-top:12px;">Chúng tôi luôn sẵn sàng hỗ trợ bạn bất cứ lúc nào!</p>
+</div>
+
+
+<script>
+function switchTab(tab) {
+    document.querySelectorAll(".content").forEach(el => el.classList.add("hidden"));
+    document.getElementById(tab).classList.remove("hidden");
+    document.querySelectorAll(".tabs button").forEach(btn => btn.classList.remove("active"));
+    event.target.classList.add("active");
+}
+
+function calcBMI() {
+    const h = parseFloat(document.getElementById("height").value)/100;
+    const w = parseFloat(document.getElementById("weight").value);
     const result = document.getElementById("result");
-    const ctx = document.getElementById("bmiChart").getContext("2d");
-    const resetHistory = document.getElementById("resetHistory");
-    const detailTable = document.getElementById("detailTable");
-    let history = JSON.parse(localStorage.getItem("bmiHistory") || "[]");
-    let chart;
+    const report = document.getElementById("report");
 
-    function updateChart() {
-      const labels = history.map((e, i) => `Lần ${i + 1}`);
-      const data = history.map((e) => e.value);
-      if (chart) chart.destroy();
-      chart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels,
-          datasets: [
-            {
-              label: "Chỉ số BMI",
-              data,
-              borderColor: "#00acc1",
-              borderWidth: 2,
-              fill: false,
-              tension: 0.3,
-              pointBackgroundColor: "#00acc1",
-            },
-          ],
-        },
-        options: {
-          scales: { y: { beginAtZero: true } },
-          plugins: { legend: { display: false } },
-        },
-      });
-    }
-
-    function getAdvice(bmi, gender, ageGroup) {
-      let category = "", advice = "";
-      if (bmi < 18.5) {
-        category = "Gầy";
-        advice = "Bạn nên bổ sung dinh dưỡng và tập thể dục nhẹ để tăng cân lành mạnh.";
-      } else if (bmi < 23) {
-        category = "Bình thường";
-        advice = "Tuyệt vời! Hãy duy trì lối sống hiện tại của bạn.";
-      } else if (bmi < 25) {
-        category = "Thừa cân";
-        advice = "Cần kiểm soát chế độ ăn và tập luyện hợp lý để giảm cân.";
-      } else {
-        category = "Béo phì";
-        advice = "Bạn nên gặp chuyên gia dinh dưỡng để được tư vấn giảm cân an toàn.";
-      }
-      if (ageGroup === "treem") advice += " (Với trẻ em, nên tham khảo biểu đồ tăng trưởng của WHO.)";
-      if (gender === "nu" && bmi >= 23 && bmi < 25) advice += " (Phụ nữ thường có tỷ lệ mỡ cao hơn, nên chú ý hơn.)";
-      return { category, advice };
-    }
-
-    calcBtn.onclick = () => {
-      const height = parseFloat(document.getElementById("height").value);
-      const weight = parseFloat(document.getElementById("weight").value);
-      const gender = document.getElementById("gender").value;
-      const ageGroup = document.getElementById("age").value;
-
-      if (!height || !weight || height <= 0 || weight <= 0) {
-        result.innerHTML = '<p style="color:red;">⚠️ Vui lòng nhập đủ thông tin hợp lệ!</p>';
-        detailTable.style.display = "none";
+    if (!h || !w) {
+        result.innerHTML = "Vui lòng nhập đầy đủ chiều cao và cân nặng!";
+        result.className="";
+        report.style.display="none";
         return;
-      }
-
-      const bmi = (weight / (height * height)).toFixed(1);
-      const { category, advice } = getAdvice(bmi, gender, ageGroup);
-
-      result.innerHTML = `
-        <p>Chỉ số BMI của bạn:</p>
-        <div class="bmi-value">${bmi}</div>
-        <div class="category">Phân loại: <b>${category}</b></div>
-        <div class="advice">${advice}</div>
-      `;
-
-      detailTable.style.display = "block";
-      highlightRow(bmi);
-
-      history.push({ value: bmi });
-      if (history.length > 10) history.shift();
-      localStorage.setItem("bmiHistory", JSON.stringify(history));
-      updateChart();
-    };
-
-    function highlightRow(bmi) {
-      document.querySelectorAll("tbody tr").forEach((tr) => tr.classList.remove("active"));
-      const rows = document.querySelectorAll("tbody tr");
-      if (bmi < 18.5) rows[0].classList.add("active");
-      else if (bmi < 23) rows[1].classList.add("active");
-      else if (bmi < 25) rows[2].classList.add("active");
-      else rows[3].classList.add("active");
     }
 
-    resetHistory.onclick = () => {
-      if (confirm("Bạn có chắc muốn xóa lịch sử BMI không?")) {
-        history = [];
-        localStorage.removeItem("bmiHistory");
-        updateChart();
-      }
-    };
+    const bmi = (w/(h*h)).toFixed(2);
+    let category="", advice="", cls="", heightAdvice="";
 
-    updateChart();
-  </script>
+    // Chiều cao
+    if (h*100 <150) heightAdvice="Chiều cao thấp hơn mức trung bình, chú ý chế độ dinh dưỡng giàu canxi, vitamin D, tập luyện phát triển chiều cao.";
+    else if (h*100 <=170) heightAdvice="Chiều cao trung bình, duy trì chế độ ăn uống và tập luyện để giữ vóc dáng cân đối.";
+    else heightAdvice="Chiều cao tốt, tiếp tục duy trì thói quen sinh hoạt lành mạnh.";
+
+    // BMI categories
+if (bmi<18.5) {
+    category="Gầy";
+    advice=`Nguy cơ: Suy giảm miễn dịch, dễ mệt mỏi, thiếu vitamin và khoáng chất.
+Lời khuyên ăn uống: 
+- Tăng protein (trứng, thịt, sữa), ăn nhiều rau củ, chia nhỏ bữa ăn.
+- Bổ sung các loại hạt, ngũ cốc nguyên hạt để tăng năng lượng.
+- Uống đủ nước, ưu tiên nước lọc, tránh nước ngọt.
+Hoạt động thể chất: 
+- Tập thể lực nhẹ, yoga hoặc đi bộ, tránh cardio quá mức.
+- Bổ sung bài tập tăng cơ và sức mạnh.
+Thói quen sinh hoạt:
+- Ngủ đủ 7-8h mỗi ngày.
+- Giảm stress, duy trì tinh thần lạc quan.`;
+    cls="bmi-gay";
+} else if (bmi<23) {
+    category="Bình thường";
+    advice=`Nguy cơ: Thấp, cơ thể khỏe mạnh.
+Lời khuyên ăn uống:
+- Duy trì chế độ ăn cân đối, uống đủ nước, ngủ đủ giấc.
+- Ăn nhiều rau xanh, trái cây và các nguồn protein lành mạnh.
+- Hạn chế đồ ngọt và thức ăn nhanh.
+Hoạt động thể chất:
+- Tập thể dục đều, kết hợp cardio và tập sức mạnh.
+- Thử các môn thể thao ngoài trời để cải thiện sức khỏe tim mạch.
+Thói quen sinh hoạt:
+- Giữ cân nặng ổn định, kiểm tra sức khỏe định kỳ.
+- Quản lý stress và duy trì tâm trạng tích cực.`;
+    cls="bmi-binhthuong";
+} else if (bmi<25) {
+    category="Thừa cân";
+    advice=`Nguy cơ: Tăng huyết áp, cholesterol cao, mỡ máu.
+Lời khuyên ăn uống:
+- Giảm đường, chất béo; ăn nhiều rau xanh, trái cây; chia nhỏ bữa ăn.
+- Ưu tiên thực phẩm nguyên hạt, hạn chế tinh bột tinh chế.
+- Kiểm soát khẩu phần, tránh ăn quá no.
+Hoạt động thể chất:
+- Cardio 30–45 phút/ngày, kết hợp tập cơ.
+- Thử yoga hoặc pilates để hỗ trợ cơ bắp và linh hoạt.
+Thói quen sinh hoạt:
+- Ngủ đủ giấc, tránh thức khuya.
+- Giảm stress, duy trì kiểm soát cân nặng thường xuyên.`;
+    cls="bmi-thuacan";
+} else {
+    category="Béo phì";
+    advice=`Nguy cơ: Tiểu đường, tim mạch, gan nhiễm mỡ, đau khớp.
+Lời khuyên ăn uống:
+- Tham khảo bác sĩ/dinh dưỡng, ăn kiêng khoa học, hạn chế đường và tinh bột.
+- Ăn nhiều rau xanh, protein nạc, tránh đồ chiên rán.
+- Uống nhiều nước, tránh nước ngọt và rượu bia.
+Hoạt động thể chất:
+- Tập luyện nhẹ đến trung bình, ưu tiên cardio, tránh quá sức.
+- Đi bộ, đạp xe, bơi lội để giảm áp lực lên khớp.
+Thói quen sinh hoạt:
+- Ngủ đủ 7-8h, tránh căng thẳng kéo dài.
+- Theo dõi cân nặng và các chỉ số sức khỏe định kỳ.
+- Tham gia các lớp nhóm hỗ trợ lối sống lành mạnh.`;
+    cls="bmi-beophi";
+}
+
+
+    result.innerHTML=`<b>BMI của bạn:</b> ${bmi} (${category})<br><b>Lời khuyên:</b><br>${advice.replace(/\n/g,'<br>')}<br><b>Chiều cao:</b> ${heightAdvice}`;
+    result.className=cls;
+
+    report.innerHTML=`<b>BÁO CÁO SỨC KHỎE</b><br>
+- Chiều cao: ${(h*100).toFixed(1)} cm<br>
+- Cân nặng: ${w} kg<br>
+- BMI: ${bmi} (${category})<br>
+- Lời khuyên: <br>${advice.replace(/\n/g,'<br>')}<br>
+- Tình trạng chiều cao: ${heightAdvice}`;
+    report.className=`report ${cls}`;
+    report.style.display="block";
+}
+</script>
+<style>
+html, body {
+    height: 100%;
+    margin: 0;
+}
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+main {
+    flex: 1; /* phần nội dung chính sẽ giãn ra */
+}
+footer {
+    text-align: center;
+    padding: 15px 0;
+    color: rgba(255,255,255,0.7);
+    font-size: 14px;
+    background: rgba(0,0,0,0.1);
+    border-top: 1px solid rgba(255,255,255,0.2);
+}
+</style>
+
+<body>
+    <main>
+        <!-- Nội dung web dài ngắn gì cũng ok -->
+    </main>
+
+    <footer>
+        &copy; 2025 By <b>MaiAn</b>. All rights reserved.
+    </footer>
+</body>
+
 </body>
 </html>
